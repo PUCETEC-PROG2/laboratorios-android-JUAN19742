@@ -111,6 +111,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
 
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.material3)
 
     testImplementation(libs.junit)
 
@@ -130,6 +131,7 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
 
+
     // --- RETROFIT VERSION ESTABLE 2.9.0 ---
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -141,5 +143,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation ("androidx.compose.material:material-icons-extended")
 
 }
