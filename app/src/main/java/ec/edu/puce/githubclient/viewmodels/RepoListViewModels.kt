@@ -17,8 +17,8 @@ class RepoListViewModels : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _erroMsg = MutableStateFlow<String?>(null)
-    val errorMsg = _erroMsg.asStateFlow()
+    private val _errorMsg = MutableStateFlow<String?>(null)
+    val errorMsg = _errorMsg.asStateFlow()
 
     init {
         fetchRepos()
@@ -29,7 +29,7 @@ class RepoListViewModels : ViewModel() {
         viewModelScope.launch {
 
             _isLoading.value = true
-            _erroMsg.value = null
+            _errorMsg.value = null
 
             try {
 
@@ -38,7 +38,7 @@ class RepoListViewModels : ViewModel() {
 
             } catch (e: Exception) {
 
-                _erroMsg.value =
+                _errorMsg.value =
                     "Error al cargar repositorios: ${e.localizedMessage}"
 
                 e.printStackTrace()

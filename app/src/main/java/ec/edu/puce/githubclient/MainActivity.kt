@@ -9,10 +9,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import ec.edu.puce.githubclient.ui.screens.RepoForm
 import ec.edu.puce.githubclient.ui.screens.RepoList
 import ec.edu.puce.githubclient.ui.theme.GithubClientTheme
+import ec.edu.puce.githubclient.viewmodels.RepoListViewModels
 
 class MainActivity : ComponentActivity() {
 
@@ -26,6 +28,7 @@ class MainActivity : ComponentActivity() {
             var currentScreen by remember {
                 mutableStateOf("repoList")
             }
+            val listViewModels: RepoListViewModels = viewModel ()
 
             GithubClientTheme {
 
@@ -38,7 +41,13 @@ class MainActivity : ComponentActivity() {
                     )
 
                     "repoForm" -> RepoForm(
-                        onBackClick = { currentScreen = "repoList"}
+                        onBackClick = {
+                            currentScreen = "repoList"
+                        },
+                        onSaveSuccess = {
+                            listViewModels.fetchRepos()
+                            currentScreen = "repoList"
+                        }
                     )
                 }
             }

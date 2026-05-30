@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface ApiService {
     @GET(value = "/user/repos")
     suspend fun getRepositories(
-        @Query("affilation") affilation: String = "owner",
+        @Query("affiliation") affiliation: String = "owner",
         @Query("sort") sort: String = "created",
         @Query("direction") direction: String = "desc",
         @Query("per_page") perPage: Int = 100,
