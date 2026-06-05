@@ -23,12 +23,32 @@ class RepoFormViewModel: ViewModel() {
             _isLoading.value = true
             _errorMsg.value = null
             try {
-                val repositoryBody = RepositoryPayload(name, description)
+                // Sanitize description to remove control characters (like \n) that GitHub API rejects
+                val sanitizedDescription = description.replace(Regex("[\\x00-\\x1F\\x7F]"), " ")
+                val repositoryBody = RepositoryPayload(name, sanitizedDescription)
                 RetrofitClient.apiService.createRepository(repositoryBody)
                 _isSuccess.value = true
             }catch (e: Exception){
                 _errorMsg.value = "Error al crear repositorio: ${e.localizedMessage}"
             }finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun updateRepository(owner: String, oldName: String, newName: String, description: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMsg.value = null
+            try {
+                // Sanitize description to remove control characters (like \n) that GitHub API rejects
+                val sanitizedDescription = description.replace(Regex("[\\x00-\\x1F\\x7F]"), " ")
+                val repositoryBody = RepositoryPayload(newName, sanitizedDescription)
+                RetrofitClient.apiService.updateRepository(owner, oldName, repositoryBody)
+                _isSuccess.value = true
+            } catch (e: Exception) {
+                _errorMsg.value = "Error al actualizar repositorio: ${e.localizedMessage}"
+            } finally {
                 _isLoading.value = false
             }
         }

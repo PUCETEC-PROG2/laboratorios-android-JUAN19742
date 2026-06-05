@@ -34,12 +34,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ec.edu.puce.githubclient.models.Repository
 import ec.edu.puce.githubclient.ui.theme.GithubClientTheme
 import ec.edu.puce.githubclient.viewmodels.RepoFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepoForm (
+    repository: Repository? = null,
     onBackClick: () -> Unit = {},
     onSaveSuccess:() -> Unit = {},
     viewModel: RepoFormViewModel = viewModel ()
@@ -49,8 +51,8 @@ fun RepoForm (
     val errorMsg by viewModel.errorMsg.collectAsState()
     val isSuccess by viewModel.isSuccess.collectAsState()
 
-    var name by remember { mutableStateOf(" ") }
-    var description by remember { mutableStateOf(" ") }
+    var name by remember { mutableStateOf(repository?.name ?: "") }
+    var description by remember { mutableStateOf(repository?.description ?: "") }
 
     LaunchedEffect(isSuccess) {
         if (isSuccess) {
@@ -63,7 +65,7 @@ fun RepoForm (
     Scaffold (
         topBar = {
             TopAppBar(
-                title = { Text( text = "Nuevo Repositorio" ) },
+                title = { Text( text = if (repository == null) "Nuevo Repositorio" else "Editar Repositorio" ) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -124,8 +126,19 @@ fun RepoForm (
                     }
 
                     Button(
-                        onClick = { viewModel.createRepository(name, description) },
-                        enabled = true,
+                        onClick = {
+                            if (repository == null) {
+                                viewModel.createRepository(name, description)
+                            } else {
+                                viewModel.updateRepository(
+                                    owner = repository.owner.login,
+                                    oldName = repository.name,
+                                    newName = name,
+                                    description = description
+                                )
+                            }
+                        },
+                        enabled = name.isNotBlank(),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(

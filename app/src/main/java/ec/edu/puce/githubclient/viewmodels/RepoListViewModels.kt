@@ -49,4 +49,19 @@ class RepoListViewModels : ViewModel() {
             }
         }
     }
+
+    fun deleteRepository(owner: String, repoName: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMsg.value = null
+            try {
+                RetrofitClient.apiService.deleteRepository(owner, repoName)
+                fetchRepos()
+            } catch (e: Exception) {
+                _errorMsg.value = "Error al eliminar repositorio: ${e.localizedMessage}"
+                e.printStackTrace()
+                _isLoading.value = false
+            }
+        }
+    }
 }
